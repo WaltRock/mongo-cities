@@ -1,7 +1,7 @@
 from mongoengine import *
 from mongoengine.queryset import queryset_manager
 
-from django.contrib.gis.geos import Point
+#from django.contrib.gis.geos import Point
 
 
 class GeoManager(object):
@@ -137,85 +137,94 @@ class GeoManager(object):
         return self.get_query_set().unionagg(*args, **kwargs)
 
 
-class CityManager(GeoManager):
-	def nearest_to(self, lat, lon):
-		#Wrong x y order
-		#p = Point(float(lat), float(lon))
-		p = Point(float(lon), float(lat))
-		return self.nearest_to_point(p)
+#class CityManager(GeoManager):
+#	def nearest_to(self, lat, lon):
+#		#Wrong x y order
+#		#p = Point(float(lat), float(lon))
+#		p = Point(float(lon), float(lat))
+#		return self.nearest_to_point(p)
+#
+#	def nearest_to_point(self, point):
+#		return self.distance(point).order_by('distance')[0]
 
-	def nearest_to_point(self, point):
-		return self.distance(point).order_by('distance')[0]
 
+class Country(Document, GeoManager):
+    name = StringField(max_length = 200)
+    code = StringField(max_length = 2)
+    population = IntField()
+    continent = StringField(max_length = 2)
+    tld = StringField(max_length = 5, unique=True)
 
-class Country(Document):
-	name = StringField(max_length = 200)
-	code = StringField(max_length = 2, db_index=True)
-	population = IntField()
-	continent = StringField(max_length = 2)
-	tld = StringField(max_length = 5, unique=True)
+    meta = {
+        'indexes': ['code'],
+        'ordering': ['name'],
+    }
 
-    # TODO: do we have to overwrite GeoManager?
-	objects = models.GeoManager()
+    def __unicode__(self):
+        return self.name
 
-	def __unicode__(self):
-		return self.name
-
-	@property
-	def hierarchy(self):
-		return [self]
-
-	class Meta:
-		ordering = ['name']
+    @property
+    def hierarchy(self):
+        return [self]
 
 
 class Region(Document, GeoManager):
-	name = StringField(max_length = 200)
-	slug = StringField(max_length = 200, db_index=True)
-	code = StringField(max_length = 10, db_index=True)
-	country = ReferenceField(Country)
-    # TODO: do we have to overwrite GeoManager?
-	objects = models.GeoManager()
+    name = StringField(max_length = 200)
+    slug = StringField(max_length = 200)
+    code = StringField(max_length = 10)
+    country = ReferenceField(Country)
 
-	def __unicode__(self):
-		return "%s, %s" % (self.name, self.country)
+    meta = {
+        'indexes': ['slug', 'code'],
+    }
 
-	@property
-	def hierarchy(self):
-		list = self.country.hierarchy
-		list.append(self)
-		return list
+    def __unicode__(self):
+        return "%s, %s" % (self.name, self.country)
+
+    @property
+    def hierarchy(self):
+        list = self.country.hierarchy
+        list.append(self)
+        return list
 
 
-class City(Document, CityManager):
-	name = StringField(max_length = 200)
-	slug = StringField(max_length = 200, db_index=True)
-	region = ReferenceField(Region)
-	location = GeoPointField()
-	population = IntField()
+class City(Document, GeoManager):
+    name = StringField(max_length = 200)
+    slug = StringField(max_length = 200)
+    region = ReferenceField(Region)
+    location = GeoPointField()
+    population = IntField()
 
-	def __unicode__(self):
-		return "%s, %s" % (self.name, self.region)
+    meta = {
+        'indexes': ['slug'],
+    }
 
-	@property
-	def hierarchy(self):
-		list = self.region.hierarchy
-		list.append(self)
-		return list
+    def __unicode__(self):
+        return "%s, %s" % (self.name, self.region)
+
+    @property
+    def hierarchy(self):
+        list = self.region.hierarchy
+        list.append(self)
+        return list
 
 
 class District(Document, GeoManager):
-	name = StringField(max_length = 200)
-	slug = StringField(max_length = 200, db_index=True)
-	city = ReferenceField(City)
-	location = GeoPointField()
-	population = IntField()
+    name = StringField(max_length = 200)
+    slug = StringField(max_length = 200)
+    city = ReferenceField(City)
+    location = GeoPointField()
+    population = IntField()
 
-	def __unicode__(self):
-		return u"%s, %s" % (self.name, self.city)
+    meta = {
+        'indexes': ['slug'],
+    }
 
-	@property
-	def hierarchy(self):
-		list = self.city.hierarchy
-		list.append(self)
-		return list
+    def __unicode__(self):
+        return u"%s, %s" % (self.name, self.city)
+
+    @property
+    def hierarchy(self):
+        list = self.city.hierarchy
+        list.append(self)
+        return list
