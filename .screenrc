@@ -1,0 +1,6 @@
+defscrollback 30000
+
+screen -t "main.git"
+screen -t "main.vim"
+screen -t "cities.shell"
+screen -t "cities.server"
