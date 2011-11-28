@@ -2,6 +2,7 @@ from mongoengine import *
 
 
 class Country(Document):
+    id = IntField(primary_key=True)
     name = StringField(max_length = 200)
     code = StringField(max_length = 2)
     population = IntField()
@@ -25,6 +26,7 @@ class Country(Document):
 
 
 class Region(Document):
+    id = IntField(primary_key=True)
     name = StringField(max_length = 200)
     slug = StringField(max_length = 200)
     code = StringField(max_length = 10)
@@ -55,6 +57,7 @@ class GeoDocument(Document):
 
 
 class City(GeoDocument):
+    id = IntField(primary_key=True)
     name = StringField(max_length = 200)
     slug = StringField(max_length = 200)
     region = ReferenceField(Region)
@@ -67,10 +70,11 @@ class City(GeoDocument):
     }
 
     def __repr__(self):
-        return unicode(self).encode('utf8')
+        return unicode(self)
 
     def __unicode__(self):
-        return "%s, %s" % (self.name, self.region)
+        return "%s, %s, %s" % (self.name, self.region.name,
+                               self.region.country.name)
 
     @property
     def hierarchy(self):
@@ -83,6 +87,7 @@ class City(GeoDocument):
         super(City, self).save(*args, **kwargs)
 
 class District(GeoDocument):
+    id = IntField(primary_key=True)
     name = StringField(max_length = 200)
     slug = StringField(max_length = 200)
     city = ReferenceField(City)
