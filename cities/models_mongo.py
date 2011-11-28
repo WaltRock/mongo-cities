@@ -13,6 +13,9 @@ class Country(Document):
         'ordering': ['name'],
     }
 
+    def __repr__(self):
+        return unicode(self).encode('utf8')
+
     def __unicode__(self):
         return self.name
 
@@ -30,6 +33,9 @@ class Region(Document):
     meta = {
         'indexes': ['slug', 'code'],
     }
+
+    def __repr__(self):
+        return unicode(self).encode('utf8')
 
     def __unicode__(self):
         return "%s, %s" % (self.name, self.country)
@@ -59,6 +65,9 @@ class City(GeoDocument):
     meta = {
         'indexes': ['slug'],
     }
+
+    def __repr__(self):
+        return unicode(self).encode('utf8')
 
     def __unicode__(self):
         return "%s, %s" % (self.name, self.region)
