@@ -1,53 +1,61 @@
-django-cities - Place models and data for Django apps
-=====================================================
+mongo-cities - Place models and data for MongoEngine
+====================================================
 
-This project includes country, region, city, and district models and is
-prepopulated with data from GeoNames. The GeoNames import script
-is also included if you'd like to re-import the data yourself, or change
-the way in which it gets cleaned up.
+Based on the django-cities project by Ben Dowling.
+
+    - models: the models part has been migrated to use MongoEngine
+    - fixtures_to_mongo: a little management command imports the
+      fixtures provided within the project.
+
+The data is originally provided by GeoNames:
+    - http://download.geonames.org/export/dump/countryInfo.txt                                                                                                           - http://download.geonames.org/export/dump/admin1CodesASCII.txt
+    - http://download.geonames.org/export/dump/cities1000.zip
 
 Includes 234 counties, 2,610 regions, 97,949 cities and 606 districts
 
-For more information and examples see http://www.coderholic.com/django-cities-countries-regions-cities-and-districts-for-django/
+For more information and examples regarding the original django-cities see
+http://www.coderholic.com/django-cities-countries-regions-cities-and-districts-for-django/
 
-Examples:
+
+Importing the fixtures:
+=======================
+
+Import everthing
+
+>>> ./manage.py fixtures_to_mongo
+
+Import all objects for Luxembourg and Liechtenstein
+
+>>> ./manage.py fixtures_to_mongo LU,LI
+
+
+Querying:
 =========
+
 Finding all London boroughs:
 
->>> london = City.objects.filter(country__name='United Kingdom').get(name='London')
+>>> uk = Country.objects.get(code='GB')
+>>> london = City.objects.get(name='London', country=uk)
 >>> boroughs = District.objects.filter(city=london)
 
-Nearest city to a given lat,lon:
+Nearest city to a given lon, lat:
 
->>> City.objects.nearest_to(51, 1)
+>>> lonlat = ((51, 1))
+>>> City.nearest(lonlat)
 <City: Dymchurch, Kent, United Kingdom>
+
+Distance of Berlin to a given lat, lon:
+
+>>> berlin = City.objects.get(name='Berlin')
+>>> lonlat_of_NY = ((-73.96751403808594, 40.78054143186031))
+>>> berlin.distance_to(lonlat_of_NY)
+6384.579236572246
+
+Distance of Berlin to London:
+
+>>> berlin.distance_to(london)
+932.8145043305717
 
 5 Nearest cities to London:
 
->>> london = City.objects.filter(country__name='United Kingdom').get(name='London')
->>> nearest = City.objects.distance(london.location).exclude(id=london.id).order_by('distance')[:5]
-
-Important Notice:
-
-The old dump file contained wrong locations (longtitude and latitude upside down, to be precise). The latest dump file fixed this error. Before updating to the latest dump, please read the following changes made to the current release:
-
-1. The dump file is renamed from initial_data.json to geonames_dump.json. This means data won't be loaded into databases automatically when running syncdb command. To load the dump, you have to run "manage.py loaddata geonames_dump" explicitly, which is actually a good feature since the original name can cause this dump file to be loaded every time you run syncdb command. There are not just only a few records in it, you know...
-
-2. The dump file has the correct locations now. Distances will be calculated correctly.
-
-3. A command called load_geonames is added. This command allows you to only load countries you feel needed in your application. Originally, the whole dump is loaded into the database, which might be too overwhelming for you or your database. Now, say you only want data for United States and Canada, run "manage.py load_geonames US CA", dada... only districts, cities, regions and countries of these two countries are loaded into the database. Later you decide to add China to the country list, you run "manage.py load_geonames CN". Now you have data for three countries.
-
-In short, after installing django-cities, add django-cities to your installed app in settings.py. Then you have two choices:
-
-1. To import the whole dump, run command:
-
-manage.py loaddata geonames_dump
-
-2. Choose certain countries to import, run command:
-
-manage.py load_geonames [country_code_list]
-
-country_code_list is a list of country codes separated by spaces.
-
-If you've installed django-cities and imported data before, the first command will fix all the location errors and the second one will fix the location errors of selected countries.
-
+>>> City.near(london.location).filter(id__ne=london.id).order_by('distance')[:5]
