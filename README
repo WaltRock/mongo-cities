@@ -8,7 +8,8 @@ Based on the django-cities project by Ben Dowling.
       fixtures provided within the project.
 
 The data is originally provided by GeoNames:
-    - http://download.geonames.org/export/dump/countryInfo.txt                                                                                                           - http://download.geonames.org/export/dump/admin1CodesASCII.txt
+    - http://download.geonames.org/export/dump/countryInfo.txt
+    - http://download.geonames.org/export/dump/admin1CodesASCII.txt
     - http://download.geonames.org/export/dump/cities1000.zip
 
 Includes 234 counties, 2,610 regions, 97,949 cities and 606 districts
