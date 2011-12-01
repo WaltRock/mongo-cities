@@ -53,6 +53,7 @@ class Extracter(object):
                                               model['fields']['name'])
                 continue
             new_instance = model_class(id=pk)
+            skip = False
             for field, value in model['fields'].iteritems():
                 if field == 'location':
                     match = self.lonlat.search(value)
@@ -63,8 +64,18 @@ class Extracter(object):
                     ))
                 elif isinstance(getattr(model_class, field), ReferenceField):
                     reference_class = self.MODELS[field]
-                    value = reference_class.objects.get(id=value)
+                    try:
+                        value = reference_class.objects.get(id=value)
+                    except reference_class.DoesNotExist, e:
+                        print ("%s with id %s not found - "
+                               "skipping creation of %s %s"
+                               % (reference_class, model['fields'][field],
+                                  model_class, model['fields']['name']))
+                        skip = True
+                        break
                 setattr(new_instance, field, value)
+            if skip:
+                continue
             new_instance.save()
             print "Saved %s %s" % (model_class.__name__, new_instance)
             if model_class == Country:

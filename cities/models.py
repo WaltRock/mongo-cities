@@ -69,7 +69,7 @@ class GeoMixin(object):
         """
         location == (( longitude, latitude ))
         """
-        return cls.objects.filter(location__near=location)
+        return cls.objects.filter(location__near_sphere=location)
 
     def distance_to(self, other):
         """

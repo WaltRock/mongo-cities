@@ -1,0 +1,163 @@
+[
+    {
+        "pk": 1,
+        "model": "cities.country",
+        "fields": {
+            "tld": "ad",
+            "code": "AD",
+            "continent": "EU",
+            "name": "Andorra",
+            "population": 84000
+        }
+    },
+    {
+        "pk": 56,
+        "model": "cities.country",
+        "fields": {
+            "tld": "de",
+            "code": "DE",
+            "continent": "EU",
+            "name": "Germany",
+            "population": 82369000
+        }
+    },
+    {
+        "pk": 76,
+        "model": "cities.country",
+        "fields": {
+            "tld": "uk",
+            "code": "GB",
+            "continent": "EU",
+            "name": "United Kingdom",
+            "population": 62348447
+        }
+    },
+    {
+        "pk": 4,
+        "model": "cities.region",
+        "fields": {
+            "country": 1,
+            "code": "AD.03",
+            "name": "Parr\u00f2quia d'Encamp",
+            "slug": "parroquia-dencamp"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "cities.region",
+        "fields": {
+            "country": 1,
+            "code": "AD.04",
+            "name": "Parr\u00f2quia de la Massana",
+            "slug": "parroquia-de-la-massana"
+        }
+    },
+    {
+        "pk": 996,
+        "model": "cities.region",
+        "fields": {
+            "country": 56,
+            "code": "DE.11",
+            "name": "Brandenburg",
+            "slug": "brandenburg"
+        }
+    },
+    {
+        "pk": 1423,
+        "model": "cities.region",
+        "fields": {
+            "country": 76,
+            "code": "GB.ENG",
+            "name": "England",
+            "slug": "england"
+        }
+    },
+    {
+        "pk": 3039163,
+        "model": "cities.city",
+        "fields": {
+            "region": 4,
+            "population": 8022,
+            "slug": "sant-julia-de-loria",
+            "name": "Sant Juli\u00e0 de L\u00f2ria",
+            "location": "POINT (1.4912900000000000 42.4637200000000021)"
+        }
+    },
+    {
+        "pk": 3041563,
+        "model": "cities.city",
+        "fields": {
+            "region": 5,
+            "population": 20430,
+            "slug": "andorra-la-vella",
+            "name": "Andorra la Vella",
+            "location": "POINT (1.5210900000000001 42.5077900000000000)"
+        }
+    },
+    {
+        "pk": 2950159,
+        "model": "cities.city",
+        "fields": {
+            "region": 996,
+            "population": 3426354,
+            "slug": "berlin",
+            "name": "Berlin",
+            "location": "POINT (13.4105299999999996 52.5243699999999976)"
+        }
+    },
+    {
+        "pk": 4298960,
+        "model": "cities.city",
+        "fields": {
+            "region": 5070,
+            "population": 7844,
+            "slug": "london",
+            "name": "London",
+            "location": "POINT (-84.0832599999999957 37.1289799999999985)"
+        }
+    },
+    {
+        "pk": 2643743,
+        "model": "cities.city",
+        "fields": {
+            "region": 1423,
+            "population": 7556900,
+            "slug": "london",
+            "name": "London",
+            "location": "POINT (-0.1257400000000000 51.5085300000000004)"
+        }
+    },
+    {
+        "pk": 2633583,
+        "model": "cities.district",
+        "fields": {
+            "city": 2643743,
+            "population": 0,
+            "slug": "woolwich",
+            "name": "Woolwich",
+            "location": "POINT (0.0648000000000000 51.4909999999999997)"
+        }
+    },
+    {
+        "pk": 2633653,
+        "model": "cities.district",
+        "fields": {
+            "city": 2643743,
+            "population": 0,
+            "slug": "wood-green",
+            "name": "Wood Green",
+            "location": "POINT (-0.1166700000000000 51.6000000000000014)"
+        }
+    },
+    {
+        "pk": 2634234,
+        "model": "cities.district",
+        "fields": {
+            "city": 2643743,
+            "population": 14276,
+            "slug": "west-wickham",
+            "name": "West Wickham",
+            "location": "POINT (-0.0166700000000000 51.3666699999999992)"
+        }
+    }
+]
