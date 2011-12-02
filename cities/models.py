@@ -1,15 +1,15 @@
 from math import radians, sin, cos, asin, sqrt
 
-from mongoengine import *
+import mongoengine as mongo
 
 
-class Country(Document):
-    id = IntField(primary_key=True)
-    name = StringField(max_length = 200)
-    code = StringField(max_length = 2, unique=True)
-    population = IntField()
-    continent = StringField(max_length = 2)
-    tld = StringField(max_length = 5, unique=True)
+class Country(mongo.Document):
+    id = mongo.IntField(primary_key=True)
+    name = mongo.StringField(max_length = 200)
+    code = mongo.StringField(max_length = 2, unique=True)
+    population = mongo.IntField()
+    continent = mongo.StringField(max_length = 2)
+    tld = mongo.StringField(max_length = 5, unique=True)
 
     meta = {
         'indexes': ['code'],
@@ -27,12 +27,12 @@ class Country(Document):
         return [self]
 
 
-class Region(Document):
-    id = IntField(primary_key=True)
-    name = StringField(max_length = 200)
-    slug = StringField(max_length = 200)
-    code = StringField(max_length = 10)
-    country = ReferenceField(Country)
+class Region(mongo.Document):
+    id = mongo.IntField(primary_key=True)
+    name = mongo.StringField(max_length = 200)
+    slug = mongo.StringField(max_length = 200)
+    code = mongo.StringField(max_length = 10)
+    country = mongo.ReferenceField(Country)
 
     meta = {
         'indexes': ['slug', 'code'],
@@ -96,14 +96,14 @@ class GeoMixin(object):
         return distance
 
 
-class City(Document, GeoMixin):
-    id = IntField(primary_key=True)
-    name = StringField(max_length = 200)
-    slug = StringField(max_length = 200)
-    region = ReferenceField(Region)
-    country = ReferenceField(Country) # added for country rel. search
-    location = GeoPointField()
-    population = IntField()
+class City(mongo.Document, GeoMixin):
+    id = mongo.IntField(primary_key=True)
+    name = mongo.StringField(max_length = 200)
+    slug = mongo.StringField(max_length = 200)
+    region = mongo.ReferenceField(Region)
+    country = mongo.ReferenceField(Country) # added for country rel. search
+    location = mongo.GeoPointField()
+    population = mongo.IntField()
 
     meta = {
         'indexes': ['slug'],
@@ -126,13 +126,13 @@ class City(Document, GeoMixin):
         self.country = self.country or self.region.country
         super(City, self).save(*args, **kwargs)
 
-class District(Document, GeoMixin):
-    id = IntField(primary_key=True)
-    name = StringField(max_length = 200)
-    slug = StringField(max_length = 200)
-    city = ReferenceField(City)
-    location = GeoPointField()
-    population = IntField()
+class District(mongo.Document, GeoMixin):
+    id = mongo.IntField(primary_key=True)
+    name = mongo.StringField(max_length = 200)
+    slug = mongo.StringField(max_length = 200)
+    city = mongo.ReferenceField(City)
+    location = mongo.GeoPointField()
+    population = mongo.IntField()
 
     meta = {
         'indexes': ['slug'],
