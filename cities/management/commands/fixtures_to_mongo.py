@@ -44,11 +44,11 @@ class Extracter(object):
     def to_db(self):
         for model in self.src_data:
             pk, model_class = model['pk'], self.MODELS[model['model']]
-            if self.verbosity >= 1 and model_class != self.old_model_class:
+            if self.verbosity >= 2 and model_class != self.old_model_class:
                 print 'starting to import %s' % model_class
             self.old_model_class = model_class
             if not self.country_in_wishlist(model):
-                if self.verbosity >= 2:
+                if self.verbosity >= 3:
                     print 'skipping %s %s' % (model_class.__name__,
                                               model['fields']['name'])
                 continue
@@ -77,7 +77,8 @@ class Extracter(object):
             if skip:
                 continue
             new_instance.save()
-            print "Saved %s %s" % (model_class.__name__, new_instance)
+            if self.verbosity >= 1:
+                print "Saved %s %s" % (model_class.__name__, new_instance)
             if model_class == Country:
                 self.imported_countries.append(new_instance)
                 self.imported_country_ids.append(pk)
